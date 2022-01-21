@@ -1,24 +1,97 @@
-# README
+# Rails API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+- Just the M&C
+- NO views! Just data
 
-Things you may want to cover:
+Project Instructions
+- $ rails new wildlife-tracker -d postgresql -T
+- $ cd wildlife-tracker
+- $ git remote add origin https://github.com/learn-academy-2021-echo/wildlife-tracker-sjproctor.git
+- $ git checkout -b main
+- $ git add .
+- $ git commit -m 'initial commit'
+- $ git push origin main
+- $ bundle add rspec-rails
+- $ rails generate rspec:install
 
-* Ruby version
 
-* System dependencies
+Only need the model and controller
+- Student - name, cohort
+- $ rails g resource Student name:string cohort:string
 
-* Configuration
+Resource creates:
+- model
+- controller
+- spec files
+- all restful routes
 
-* Database creation
+Postman
+- Using Postman to visualize data output
+- Headers tab - key: content-type, value: application/json
+- Go back to params tab
+- If you get HTML as a response, check the visualize tab
 
-* Database initialization
 
-* How to run the test suite
+INDEX
+- controller
+```
+def index
+  student = Student.all
+  render json: student
+end
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+SHOW
+- controller
+```
+def show
+  student = Student.find(params[:id])
+  render json: student
+end
+```
 
-* Deployment instructions
+CREATE
+- controller
+- add to ApplicationController: `skip_before_action :verify_authenticity_token`
+```
+def create
+  student = Student.create(student_params)
+  if student.valid?
+    render json: student
+  else
+    render json: student.errors
+  end
+end
 
-* ...
+private
+def student_params
+  params.require(:student).permit(:name, :cohort)
+end
+```
+
+UPDATE
+- controller
+```
+def update
+  student = Student.find(params[:id])
+  student.update(student_params)
+  if student.valid?
+    render json: student
+  else
+    render json: student.errors
+  end
+end
+```
+
+DESTROY
+- controller
+```
+def destroy
+  student = Student.find(params[:id])
+  if student.destroy
+    render json: student
+  else
+    render json: student.errors
+  end
+end
+```
